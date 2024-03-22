@@ -17,5 +17,12 @@
         "react"
     ],
     "rules": {
+        "import/extensions": "off",
+        "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto" /* this setting should be included */
+            }
+        ]
     }
 }
