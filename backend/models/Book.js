@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const thingSchema = mongoose.Schema({
+const bookSchema = mongoose.Schema({
+    // Change from thingSchema to bookSchema
     title: { type: String, required: true },
     description: { type: String, required: true },
     imageUrl: { type: String, required: true },
@@ -8,4 +9,4 @@ const thingSchema = mongoose.Schema({
     price: { type: Number, required: true },
 });
 
-module.exports = mongoose.model("Thing", thingSchema);
+module.exports = mongoose.model("Book", bookSchema); // Change from "Thing" to "Book"
