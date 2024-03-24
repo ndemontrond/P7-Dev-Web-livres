@@ -15,7 +15,7 @@ const bookCtrl = require("../controllers/book");
 // Define routes corresponding to your frontend API_ROUTES
 // router.get("/", auth, bookCtrl.getAllBooks); // Route for fetching all books
 router.get("/", bookCtrl.getAllBooks); // Route for fetching all books
-router.post("/", multer, bookCtrl.createBook); // Route for creating a new book
+//router.post("/", multer, bookCtrl.createBook); // Route for creating a new book
 // router.get("/:id", auth, bookCtrl.getBookById); // Route for fetching a single book by ID
 // router.put("/:id", auth, multer, bookCtrl.updateBook); // Route for updating a book
 // router.delete("/:id", auth, bookCtrl.deleteBook); // Route for deleting a book
