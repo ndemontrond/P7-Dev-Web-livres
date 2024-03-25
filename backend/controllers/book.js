@@ -97,24 +97,13 @@ exports.deleteBook = (req, res, next) => {
         });
 };
 
-// exports.getAllBooks = (req, res, next) => {
-//     // Change from getAllStuff to getAllBooks
-//     Book.find()
-//         .then((books) => {
-//             // Change from things to books
-//             res.status(200).json(books); // Change from things to books
-//         })
-//         .catch((error) => {
-//             res.status(400).json({
-//                 error: error,
-//             });
-//         });
-// };
 
-exports.getAllBooks = (req, res, next) => {
+exports.getAllBooks = async (req, res, next) => {
+    // Change from getAllStuff to getAllBooks
     try {
-        // Change from things to books
-        res.status(200); // Change from things to books
+        const books = await Book.find();
+        res.status(200).json(books);
+        return books;
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
