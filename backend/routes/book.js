@@ -10,15 +10,14 @@ const bookCtrl = require("../controllers/book");
 // router.post("/", auth, multer, stuffCtrl.createThing);
 // router.get("/:id", auth, stuffCtrl.getOneThing);
 // router.put("/:id", auth, multer, stuffCtrl.modifyThing);
-// router.delete("/:id", auth, stuffCtrl.deleteThing);
 
 // Define routes corresponding to your frontend API_ROUTES
 // router.get("/", auth, bookCtrl.getAllBooks); // Route for fetching all books
 router.get("/", bookCtrl.getAllBooks); // Route for fetching all books
-//router.post("/", multer, bookCtrl.createBook); // Route for creating a new book
+router.post("/", auth, multer, bookCtrl.createBook); // Route for creating a new book
 router.get("/:id", bookCtrl.getOneBook); // Route for fetching a single book by ID / Auth deleted
 // router.put("/:id", auth, multer, bookCtrl.updateBook); // Route for updating a book
-// router.delete("/:id", auth, bookCtrl.deleteBook); // Route for deleting a book
-// routes commented out throw Error: Route.put() requires a callback function but got a [object Undefined]
+router.delete("/:id", auth, bookCtrl.deleteBook); // Route for deleting a book
+// routes commented out throw Error: Route.put() requires a callback function but got a [object Undefined] / auth
 
 module.exports = router;
