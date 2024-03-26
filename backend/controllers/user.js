@@ -4,6 +4,15 @@ const User = require("../models/User");
 
 exports.signup = async (req, res, next) => {
     try {
+        // Check if password meets the minimum length requirement
+        if (req.body.password.length < 8) {
+            return res
+                .status(400)
+                .json({
+                    error: "Le mot de passe doit contenir au moins 8 caractères.",
+                });
+        }
+        
         // Check if user with the same email already exists
         const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) {
