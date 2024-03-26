@@ -24,20 +24,18 @@ exports.createBook = (req, res, next) => {
         });
 };
 
-exports.getOneBook = (req, res, next) => {
+exports.getOneBook = async (req, res, next) => {
     // Change from getOneThing to getOneBook
-    Book.findOne({
-        // Change from Thing to Book
-        _id: req.params.id,
-    })
-        .then((book) => {
-            res.status(200).json(book); // Change from thing to book
-        })
-        .catch((error) => {
-            res.status(404).json({
-                error: error,
-            });
-        });
+    try {
+        const book = await Book.findOne({ _id: req.params.id });
+        if (book) {
+            res.status(200).json(book);
+        } else {
+            res.status(404).json({ error: "Book not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
 };
 
 exports.modifyBook = (req, res, next) => {
@@ -96,7 +94,6 @@ exports.deleteBook = (req, res, next) => {
             res.status(500).json({ error });
         });
 };
-
 
 exports.getAllBooks = async (req, res, next) => {
     // Change from getAllStuff to getAllBooks

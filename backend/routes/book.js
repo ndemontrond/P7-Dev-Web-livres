@@ -16,7 +16,7 @@ const bookCtrl = require("../controllers/book");
 // router.get("/", auth, bookCtrl.getAllBooks); // Route for fetching all books
 router.get("/", bookCtrl.getAllBooks); // Route for fetching all books
 //router.post("/", multer, bookCtrl.createBook); // Route for creating a new book
-// router.get("/:id", auth, bookCtrl.getBookById); // Route for fetching a single book by ID
+router.get("/:id", bookCtrl.getOneBook); // Route for fetching a single book by ID / Auth deleted
 // router.put("/:id", auth, multer, bookCtrl.updateBook); // Route for updating a book
 // router.delete("/:id", auth, bookCtrl.deleteBook); // Route for deleting a book
 // routes commented out throw Error: Route.put() requires a callback function but got a [object Undefined]
