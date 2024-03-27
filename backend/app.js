@@ -30,9 +30,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-// const bookRoutes = require("./routes/book");
 app.use("/api/books", bookRoutes);
-// const userRoutes = require("./routes/user");
 app.use("/api/auth", userRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
 

@@ -1,21 +1,22 @@
 const Book = require("../models/Book"); // Change from "Thing" to "Book"
 const fs = require("fs");
+// const processImage = require("../middleware/sharp-config");
 
 exports.createBook = async (req, res, next) => {
     // Change from createThing to createBook
     const bookObject = JSON.parse(req.body.book); // Change from thing to book
     delete bookObject._id;
     delete bookObject._userId;
-    const book = new Book({
-        // Change from Thing to Book
-        ...bookObject,
-        userId: req.auth.userId,
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-            req.file.filename
-        }`,
-    });
-
     try {
+        const imageUrl = await processImage(
+            req.file.buffer,
+            req.file.originalname
+        );
+        const book = new Book({
+            ...bookObject,
+            userId: req.auth.userId,
+            imageUrl: imageUrl,
+        });
         await book.save();
         res.status(201).json({ message: "Livre enregistré !" });
     } catch (error) {

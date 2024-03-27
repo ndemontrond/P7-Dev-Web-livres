@@ -2,19 +2,14 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const multer = require("../middleware/multer-config");
+const sharp = require("../middleware/sharp-config");
 
-// const stuffCtrl = require("../controllers/stuff");
 const bookCtrl = require("../controllers/book");
-
-// router.get("/", auth, stuffCtrl.getAllThings);
-// router.post("/", auth, multer, stuffCtrl.createThing);
-// router.get("/:id", auth, stuffCtrl.getOneThing);
-// router.put("/:id", auth, multer, stuffCtrl.modifyThing);
 
 // Define routes corresponding to your frontend API_ROUTES
 // router.get("/", auth, bookCtrl.getAllBooks); // Route for fetching all books
 router.get("/", bookCtrl.getAllBooks); // Route for fetching all books
-router.post("/", auth, multer, bookCtrl.createBook); // Route for creating a new book
+router.post("/", auth, multer, sharp, bookCtrl.createBook); // Route for creating a new book
 router.get("/:id", bookCtrl.getOneBook); // Route for fetching a single book by ID / Auth deleted
 // router.put("/:id", auth, multer, bookCtrl.updateBook); // Route for updating a book
 router.delete("/:id", auth, bookCtrl.deleteBook); // Route for deleting a book
