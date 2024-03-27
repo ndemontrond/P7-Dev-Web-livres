@@ -28,8 +28,6 @@ const processImage = async (req, res, next) => {
         // Set the filename in the request object for further reference
         req.filename = filename; //check if used later on
 
-        console.log(filePath);
-
         // Construct the URL for the processed image
         const processedImageUrl = `${req.protocol}://${req.get(
             "host"
@@ -38,7 +36,6 @@ const processImage = async (req, res, next) => {
         // Attach the processed image URL to the request object
         req.processedImageUrl = processedImageUrl;
 
-        console.log("sharp succesfully exited");
         next();
     } catch (error) {
         console.error("Error processing image:", error);
