@@ -6,13 +6,15 @@ exports.createBook = async (req, res, next) => {
     const bookObject = JSON.parse(req.body.book); // Change from thing to book
     delete bookObject._id;
     delete bookObject._userId;
+    console.log("1");
     try {
+        console.log("2");
         const book = new Book({
             ...bookObject,
             userId: req.auth.userId,
-            imageUrl: imageUrl,
+            imageUrl: req.processedImageUrl, // Use the processed image URL
         });
-        console.log(book);
+        console.log("3", book);
         await book.save();
         res.status(201).json({ message: "Livre enregistré !" });
     } catch (error) {

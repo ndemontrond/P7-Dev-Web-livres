@@ -26,7 +26,17 @@ const processImage = async (req, res, next) => {
         await sharp(processedBuffer).toFile(filePath);
 
         // Set the filename in the request object for further reference
-        req.filename = filename;
+        req.filename = filename; //check if used later on
+
+        console.log(filePath);
+
+        // Construct the URL for the processed image
+        const processedImageUrl = `${req.protocol}://${req.get(
+            "host"
+        )}/images/${filename}`;
+        console.log(processedImageUrl);
+        // Attach the processed image URL to the request object
+        req.processedImageUrl = processedImageUrl;
 
         console.log("sharp succesfully exited");
         next();
