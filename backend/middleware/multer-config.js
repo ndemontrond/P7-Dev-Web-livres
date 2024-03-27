@@ -15,7 +15,7 @@ const fileFilter = (req, file, callback) => {
     }
 };
 
-const upload = multer({ storage: storage, fileFilter: fileFilter }).single(
+const upload = multer({ storage, fileFilter: fileFilter }).single(
     "image"
 );
 

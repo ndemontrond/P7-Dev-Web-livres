@@ -1,19 +1,35 @@
+// Middleware for processing image using Sharp
+
 const sharp = require("sharp");
 const path = require("path");
 
-const processImage = async (buffer, originalname) => {
+const processImage = async (req, res, next) => {
     try {
-        if (!buffer || buffer.length === 0) {
-            throw new Error("Input file buffer is empty or undefined.");
+        if (!req.file) {
+            return next(new Error("No file uploaded."));
         }
 
-        const timestamp = new Date().toISOString();
-        const ref = `${timestamp}-${originalname}.webp`;
-        const filePath = path.join(__dirname, "../images/", ref); // Absolute file path
-        await sharp(buffer).webp({ quality: 20 }).toFile(filePath);
-        const link = `http://localhost:4000/${ref}`;
-        console.log("sharp exited with: ", link);
-        return link;
+        const { buffer, originalname } = req.file;
+
+        const timestamp = new Date().toISOString().replace(/:/g, "_");
+        const filename = `${timestamp}-${originalname}`;
+        const filePath = path.join(__dirname, "../images/", filename);
+
+        const processedBuffer = await sharp(buffer)
+            // Example: Resize the image to 500px width
+            .resize({ width: 500 })
+            //    .webpwebp({ quality: 20 })
+            // Other Sharp operations can be added here as needed
+            .toBuffer();
+
+        // Write the processed image buffer to file
+        await sharp(processedBuffer).toFile(filePath);
+
+        // Set the filename in the request object for further reference
+        req.filename = filename;
+
+        console.log("sharp succesfully exited");
+        next();
     } catch (error) {
         console.error("Error processing image:", error);
         throw error;
