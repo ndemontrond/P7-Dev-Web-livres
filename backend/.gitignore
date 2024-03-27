@@ -4,3 +4,5 @@
 .env
 #books cover image
 /images
+#ignore testing script
+/test

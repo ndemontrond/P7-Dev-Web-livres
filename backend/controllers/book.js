@@ -96,6 +96,61 @@ exports.getAllBooks = async (req, res, next) => {
         res.status(200).json(books);
         return books;
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({
+            error: "An error has occurred while fetching all books",
+        });
+    }
+};
+
+exports.getBestRated = async (req, res, next) => {
+    try {
+        const topRatedBooksQuery = Book.find();
+        topRatedBooksQuery.sort({ averageRating: -1 }); // Sort by averageRating in descending order
+        topRatedBooksQuery.limit(3);
+        const topRatedBooks = await topRatedBooksQuery.exec(); // Execute the query and await the result
+        res.status(200).json(topRatedBooks);
+    } catch (error) {
+        res.status(500).json({
+            error: "An error has occurred while fetching all books",
+        });
+    }
+};
+
+exports.rateBook = async (req, res, next) => {
+    try {
+        // Check that the user has not already rated the book
+        const existingRating = await Book.findOne({
+            _id: req.params.id,
+            "ratings.userId": req.body.userId,
+        });
+        if (existingRating) {
+            return res
+                .status(400)
+                .json({ message: "User has already rated this book" });
+        }
+
+        const rating = parseFloat(req.body.rating);
+        // Check that the rating is a number between 0..5 included
+        if (isNaN(rating) || rating < 0 || rating > 5) {
+            return res
+                .status(400)
+                .json({ message: "Rating must be a number between 0 and 5" });
+        }
+
+        // Retrieves the book to rate according to the id of the request
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+
+        // Add a new rating to the ratings array of the book
+        book.ratings.push({ userId: req.body.userId, grade: req.body.rating });
+
+        // Save the book to MongoDB, averageRating will be up to date on save
+        await book.save();
+        res.status(200).json(book);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "An error has occurred" });
     }
 };
