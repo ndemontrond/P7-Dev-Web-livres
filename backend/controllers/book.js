@@ -118,10 +118,12 @@ exports.getBestRated = async (req, res, next) => {
 
 exports.rateBook = async (req, res, next) => {
     try {
-        // Check that the user has not already rated the book
+        const { id, userId, rating } = req.params;
+
+        // Check if the user has not already rated the book
         const existingRating = await Book.findOne({
-            _id: req.params.id,
-            "ratings.userId": req.body.userId,
+            _id: id,
+            "ratings.userId": userId,
         });
         if (existingRating) {
             return res
@@ -129,25 +131,27 @@ exports.rateBook = async (req, res, next) => {
                 .json({ message: "User has already rated this book" });
         }
 
-        const rating = parseFloat(req.body.rating);
-        // Check that the rating is a number between 0..5 included
-        if (isNaN(rating) || rating < 0 || rating > 5) {
+        const parsedRating = parseFloat(rating);
+        // Check if the rating is a valid number between 0 and 5
+        if (isNaN(parsedRating) || parsedRating < 0 || parsedRating > 5) {
             return res
                 .status(400)
                 .json({ message: "Rating must be a number between 0 and 5" });
         }
 
         // Retrieves the book to rate according to the id of the request
-        const book = await Book.findById(req.params.id);
+        const book = await Book.findById(id);
+
         if (!book) {
             return res.status(404).json({ message: "Book not found" });
         }
 
-        // Add a new rating to the ratings array of the book
-        book.ratings.push({ userId: req.body.userId, grade: req.body.rating });
+        // Add a new rating to the book's ratings array
+        book.ratings.push({ userId, grade: parsedRating });
 
-        // Save the book to MongoDB, averageRating will be up to date on save
+        // Save the book to MongoDB, updating averageRating
         await book.save();
+
         res.status(200).json(book);
     } catch (error) {
         console.error(error);

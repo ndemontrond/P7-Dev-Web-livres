@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+
 
 const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
@@ -14,6 +17,8 @@ mongoose
     .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 const app = express();
+
+app.use(mongoSanitize()); //remove $ and .
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,7 +33,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json());
+app.use(helmet({crossOriginResourcePolicy: false}), bodyParser.json());
 
 app.use("/api/books", bookRoutes);
 app.use("/api/auth", userRoutes);

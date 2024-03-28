@@ -16,23 +16,15 @@ const processImage = async (req, res, next) => {
         const filePath = path.join(__dirname, "../images/", filename);
 
         const processedBuffer = await sharp(buffer)
-            // Example: Resize the image to 500px width
-            .resize({ width: 500 })
-            //    .webpwebp({ quality: 20 })
-            // Other Sharp operations can be added here as needed
+            .webp({ quality: 80 }) 
             .toBuffer();
-
-        // Write the processed image buffer to file
         await sharp(processedBuffer).toFile(filePath);
 
-        // Set the filename in the request object for further reference
-        req.filename = filename; //check if used later on
-
+        req.filename = filename;
         // Construct the URL for the processed image
         const processedImageUrl = `${req.protocol}://${req.get(
             "host"
         )}/images/${filename}`;
-        console.log(processedImageUrl);
         // Attach the processed image URL to the request object
         req.processedImageUrl = processedImageUrl;
 

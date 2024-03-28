@@ -23,7 +23,6 @@ bookSchema.pre('save', function (next) {
   this.averageRating = ratings.length
       ? Math.round(sumOfRatings / ratings.length)
       : 0;
-
   // Call next to proceed with the save operation
   next();
 });
