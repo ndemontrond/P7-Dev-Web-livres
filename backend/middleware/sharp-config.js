@@ -6,7 +6,7 @@ const path = require("path");
 const processImage = async (req, res, next) => {
     try {
         if (!req.file) {
-            return next(new Error("No file uploaded."));
+            return next();
         }
 
         const { buffer, originalname } = req.file;

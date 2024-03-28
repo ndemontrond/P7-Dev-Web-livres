@@ -35,13 +35,18 @@ exports.getOneBook = async (req, res, next) => {
 
 exports.updateBook = async (req, res, next) => {
     try {
-        // Change from modifyThing to modifyBook
+        // If there's a file, update with the new image URL
         const bookObject = req.file
             ? {
                   ...JSON.parse(req.body.book),
                   imageUrl: req.processedImageUrl,
               }
             : { ...req.body };
+
+        if (req.file) {
+            const filename = book.imageUrl.split("/images/")[1];
+            fs.unlinkSync(`images/${filename}`);
+        }
 
         delete bookObject._userId;
 
