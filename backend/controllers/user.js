@@ -30,6 +30,12 @@ exports.signup = async (req, res, next) => {
         await user.save();
         res.status(201).json({ message: "Utilisateur créé !" });
     } catch (error) {
+         if (error.name === "ValidationError") {
+             const errors = Object.values(error.errors).map(
+                 (err) => err.message
+             );
+             return res.status(400).json({ errors });
+         }
         res.status(500).json({ error: "Une erreur est survenue." });
     }
 };
