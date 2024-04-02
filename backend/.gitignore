@@ -1,6 +1,8 @@
 #dependencies
 /node_modules
-#books cover image
-/images
+#books cover image 
+#/images/*webp
+#Environnement
+#.env
 #ignore testing script
 /test
