@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const bookSchema = mongoose.Schema({
-    // Change from thingSchema to bookSchema
     userId: { type: String, required: true },
     title: { type: String, required: true },
     author: { type: String, required: true },

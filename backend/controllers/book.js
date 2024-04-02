@@ -134,7 +134,10 @@ exports.getBestRated = async (req, res, next) => {
 
 exports.rateBook = async (req, res, next) => {
     try {
-        const { id, userId, rating } = req.params;
+        const id = { _id: req.params.id };
+        
+        // Extract userId and rating from request body
+        const { userId, rating } = req.body;
 
         // Check if the user has not already rated the book
         const existingRating = await Book.findOne({
