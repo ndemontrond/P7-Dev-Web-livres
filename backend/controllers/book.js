@@ -1,8 +1,9 @@
-const Book = require("../models/Book"); 
+const Book = require("../models/Book");
 const fs = require("fs");
+const path = require("path"); // Import the path module
 
 exports.createBook = async (req, res, next) => {
-    const bookObject = JSON.parse(req.body.book); 
+    const bookObject = JSON.parse(req.body.book);
     delete bookObject._id;
     delete bookObject._userId;
     try {
@@ -33,39 +34,53 @@ exports.getOneBook = async (req, res, next) => {
 
 exports.updateBook = async (req, res, next) => {
     try {
-        // If there's a file, update with the new image URL
-        const bookObject = req.file
-            ? {
-                  ...JSON.parse(req.body.book),
-                  imageUrl: req.processedImageUrl,
-              }
-            : { ...req.body };
-
-        if (req.file) {
-            const filename = book.imageUrl.split("/images/")[1];
-            fs.unlinkSync(`images/${filename}`);
-        }
-
-        delete bookObject._userId;
-
+        // Check if the book exists
         const book = await Book.findOne({ _id: req.params.id });
-
         if (!book) {
             return res.status(404).json({ message: "Book not found" });
         }
 
-        if (book.userId != req.auth.userId) {
-            res.status(401).json({ message: "Not authorized" });
+        // Check if the user is authorized to update the book
+        if (book.userId !== req.auth.userId) {
+            return res.status(401).json({ message: "Not authorized" });
         }
 
-        await Book.updateOne(
+        // If there's a file, update with the new image URL
+        let imageUrl;
+        if (req.file) {
+            imageUrl = req.processedImageUrl;
+            // Delete the previous image file
+            const oldImageUrl = book.imageUrl;
+            const oldFilename = oldImageUrl.split("/images/")[1];
+            const oldImagePath = path.join(__dirname, "../images", oldFilename);
+            if (fs.existsSync(oldImagePath)) {
+                fs.unlinkSync(oldImagePath);
+                console.log(`Deleted old image file: ${oldFilename}`);
+            } else {
+                console.log("Old image file not found:", oldImagePath);
+            }
+        } else {
+            imageUrl = book.imageUrl;
+        }
+
+        // Update book
+        const updatedBook = await Book.findOneAndUpdate(
             { _id: req.params.id },
-            { ...bookObject, _id: req.params.id,  }
+            { ...req.body, imageUrl },
+            { new: true } // Return the updated document
         );
 
-        res.status(200).json({ message: "Livre modifié!" }); 
+        if (!updatedBook) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+
+        res.status(200).json({
+            message: "Book updated successfully",
+            book: updatedBook,
+        });
     } catch (error) {
-        res.status(400).json({ error });
+        console.error("Error updating book:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 };
 
@@ -80,7 +95,7 @@ exports.deleteBook = async (req, res, next) => {
             try {
                 await Book.deleteOne({ _id: req.params.id });
                 res.status(200).json({
-                    message: "Livre supprimé !", 
+                    message: "Livre supprimé !",
                 });
             } catch (error) {
                 return res.status(401).json({ error });
