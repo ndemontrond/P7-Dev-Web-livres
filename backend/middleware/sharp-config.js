@@ -12,7 +12,7 @@ const processImage = async (req, res, next) => {
         const { buffer, originalname } = req.file;
 
         const timestamp = new Date().toISOString().replace(/:/g, "_");
-        const filename = `${timestamp}-${originalname}`;
+        const filename = `${timestamp}-${path.parse(originalname).name}.webp`;
         const filePath = path.join(__dirname, "../images/", filename);
 
         const processedBuffer = await sharp(buffer)
