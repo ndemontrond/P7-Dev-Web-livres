@@ -1,9 +1,8 @@
-const Book = require("../models/Book"); // Change from "Thing" to "Book"
+const Book = require("../models/Book"); 
 const fs = require("fs");
 
 exports.createBook = async (req, res, next) => {
-    // Change from createThing to createBook
-    const bookObject = JSON.parse(req.body.book); // Change from thing to book
+    const bookObject = JSON.parse(req.body.book); 
     delete bookObject._id;
     delete bookObject._userId;
     try {
@@ -20,7 +19,6 @@ exports.createBook = async (req, res, next) => {
 };
 
 exports.getOneBook = async (req, res, next) => {
-    // Change from getOneThing to getOneBook
     try {
         const book = await Book.findOne({ _id: req.params.id });
         if (book) {
@@ -62,17 +60,16 @@ exports.updateBook = async (req, res, next) => {
 
         await Book.updateOne(
             { _id: req.params.id },
-            { ...bookObject, _id: req.params.id }
+            { ...bookObject, _id: req.params.id,  }
         );
 
-        res.status(200).json({ message: "Livre modifié!" }); // Change message from "Objet" to "Livre"
+        res.status(200).json({ message: "Livre modifié!" }); 
     } catch (error) {
         res.status(400).json({ error });
     }
 };
 
 exports.deleteBook = async (req, res, next) => {
-    // Change from deleteThing to deleteBook
     try {
         const book = await Book.findOne({ _id: req.params.id });
         if (book.userId != req.auth.userId) {
@@ -83,7 +80,7 @@ exports.deleteBook = async (req, res, next) => {
             try {
                 await Book.deleteOne({ _id: req.params.id });
                 res.status(200).json({
-                    message: "Livre supprimé !", // Change message from "Objet" to "Livre"
+                    message: "Livre supprimé !", 
                 });
             } catch (error) {
                 return res.status(401).json({ error });
@@ -95,7 +92,6 @@ exports.deleteBook = async (req, res, next) => {
 };
 
 exports.getAllBooks = async (req, res, next) => {
-    // Change from getAllStuff to getAllBooks
     try {
         const books = await Book.find();
         res.status(200).json(books);

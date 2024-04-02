@@ -27,4 +27,4 @@ bookSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = mongoose.model("Book", bookSchema); // Change from "Thing" to "Book"
+module.exports = mongoose.model("Book", bookSchema);

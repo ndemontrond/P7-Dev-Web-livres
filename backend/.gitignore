@@ -1,7 +1,5 @@
 #dependencies
 /node_modules
-#environment file
-.env
 #books cover image
 /images
 #ignore testing script
